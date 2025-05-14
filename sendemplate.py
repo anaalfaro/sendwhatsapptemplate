@@ -1,4 +1,5 @@
 import logging
+import os
 import azure.functions as func
 from azure.communication.messages import NotificationMessagesClient
 from azure.communication.messages.models import TemplateNotificationContent
@@ -14,8 +15,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         template_id = req_body.get('template_id')
         channel_registration_id = req_body.get('channel_registration_id')
 
-        # Configurar cliente de ACS
-        connection_string = "endpoint=https://cccommunicationservices.europe.communication.azure.com/;accesskey=TU_ACCESS_KEY"
+        # Obtener la clave de ACS desde la variable de entorno
+        connection_string = os.getenv("ACS_CONNECTION_STRING")
         client = NotificationMessagesClient.from_connection_string(connection_string)
 
         # Configurar mensaje con plantilla
