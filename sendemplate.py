@@ -11,21 +11,23 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         phone_number = req_body.get('to')
         nombre = req_body.get('nombre')
         fecha = req_body.get('fecha')
+        template_id = req_body.get('template_id')
+        channel_registration_id = req_body.get('channel_registration_id')
 
         # Configurar cliente de ACS
-        connection_string = "endpoint=https://cccommunicationservices.europe.communication.azure.com/;accesskey=wP2oDfZlISmObpFv0ftwkTdozzR8nPGVwJ9zBs9sY9kLM0r46se4JQQJ99BCACULyCp7JkqPAAAAAZCSsuim"
+        connection_string = "endpoint=https://cccommunicationservices.europe.communication.azure.com/;accesskey=TU_ACCESS_KEY"
         client = NotificationMessagesClient.from_connection_string(connection_string)
 
         # Configurar mensaje con plantilla
         template_message = TemplateNotificationContent(
-            channel_registration_id="17c8e032-28bc-4cb8-8d45-1ed3f9d5d2a4",
-            to="+34638675292",
-            template_id="100d3169_fe7f_4327_bda1_8d30ebcc9906",
+            channel_registration_id=channel_registration_id,
+            to=[phone_number],
+            template_id=template_id,
             parameters={"nombre": nombre, "fecha": fecha}
         )
 
         # Enviar mensaje
-        response = client.send(template_message)
+        response = client.send_notification(template_message)
 
         return func.HttpResponse(f"Mensaje enviado correctamente a {phone_number}", status_code=200)
 
